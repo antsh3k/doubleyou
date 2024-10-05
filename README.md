@@ -3,6 +3,21 @@ Effortlessly track your health data and access personalized medical expert level
 
 
 ## Introduction
+__Problem:__ Healthcare is a mess
+
+__Solution:__ Digital Doctor
+
+### Healthcare Agents
+- **AI-driven medical document processor**, providing real-time insights and conversational healthcare assistants. Reducing the administrative burden on healthcare professionals.
+
+### Digital Health Twin
+- **Highly accurate digital health representation** of any patient or patient cohort which can be used to curate personalized treatments and allow virtual trials of new drugs.
+
+### Future Health Simulator
+- **Simulating future health trajectory**, identifying future healthcare needs, predicting outcomes of alternative treatment paths.
+
+
+## APP
 
 This is a hybrid Next.js 14 + Python template. One great use case of this is to write Next.js apps that use Python AI libraries on the backend, while still having the benefits of Next.js Route Handlers and Server Side Rendering.
 
