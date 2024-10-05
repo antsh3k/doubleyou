@@ -8,7 +8,7 @@ load_dotenv()
 ### Create FastAPI instance with custom docs and openapi url
 app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
-# add 
+# Include the Mistral router in the FastAPI application
 app.include_router(mistral_router)
 
 @app.get("/api/py/helloFastApi")
