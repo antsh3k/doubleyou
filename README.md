@@ -7,13 +7,15 @@ __Problem:__ Healthcare is a mess
 
 __Solution:__ Digital Doctor
 
-### Healthcare Agents
-- **AI-driven medical document processor**, providing real-time insights and conversational healthcare assistants. Reducing the administrative burden on healthcare professionals.
+We see our digital doctor consisting of three core components:
 
-### Digital Health Twin
+### (Legs) Healthcare Agents
+- **AI-driven medical document processor**, the foundation of our doctor providing real-time insights and conversational healthcare assistants. Reducing the administrative burden on healthcare professionals.
+
+### (Core) Digital Health Twin
 - **Highly accurate digital health representation** of any patient or patient cohort which can be used to curate personalized treatments and allow virtual trials of new drugs.
 
-### Future Health Simulator
+### (Brain)  Future Health Simulator
 - **Simulating future health trajectory**, identifying future healthcare needs, predicting outcomes of alternative treatment paths.
 
 
