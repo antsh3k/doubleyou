@@ -1,5 +1,5 @@
-# doubleyou
-The next generation patient facing health application
+# DoubleYou
+Effortlessly track your health data and access personalized medical expert level insights, all at your fingertips.
 
 
 ## Introduction
