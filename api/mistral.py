@@ -1,25 +1,31 @@
-from fastapi import APIRouter, HTTPException
-import requests
 import os
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from mistralai import Mistral
 
 router = APIRouter()
 
-MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
+class Message(BaseModel):
+    content: str
 
-@router.post("/mistral/generate")
-async def generate_text(prompt: str):
-    headers = {
-        "Authorization": f"Bearer {MISTRAL_API_KEY}",
-        "Content-Type": "application/json",
-    }
-    data = {
-        "prompt": prompt,
-        # Additional parameters can go here as required by Mistral API
-    }
+@router.post("/mistral")
+async def mistral_endpoint(message: Message):
+    api_key = os.environ.get("MISTRAL_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="MISTRAL_API_KEY not found in environment variables")
 
-    response = requests.post(MISTRAL_API_URL, json=data, headers=headers)
+    model = "mistral-large-latest"
+    client = Mistral(api_key=api_key)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
-        raise HTTPException(status_code=response.status_code, detail=response.text)
+    chat_response = client.chat.complete(
+        model=model,
+        messages=[
+            {
+                "role": "user",
+                "content": message.content,
+            },
+        ]
+    )
+
+    return {"response": chat_response.choices[0].message.content}
+
