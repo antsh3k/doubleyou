@@ -1,7 +1,35 @@
+"use client";
+import { BodyComponent } from "@darshanpatel2608/human-body-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import MultiStepOnboarding from "./components/multi-step-onboarding";
 
 export default function Home() {
+  const exampleParams = {
+    head: { selected: true },
+    left_arm: { show: false },
+    left_hand: { show: false },
+  };
+
+  const [params, setParams] = useState<any>(exampleParams);
+  return (
+    <div className="bg-black w-screen h-screen">
+      {/* <MultiStepOnboarding /> */}
+      <BodyComponent partsInput={params} />
+    </div>
+  );
+  return (
+    <div className="min-w-screen min-h-screen flex justify-center items-center flex-col">
+      <h1>hello</h1>
+      <iframe
+        src="https://human.biodigital.com/viewer?modelId=someModelId&bgColor=ffffff"
+        width="100%"
+        height="600"
+        allowFullScreen
+      ></iframe>
+    </div>
+  );
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
