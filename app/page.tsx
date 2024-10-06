@@ -1,7 +1,25 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import MultiStepOnboarding from "./components/multi-step-onboarding";
+import { Skeleton } from "./components/skeleton";
+import Timeline from "./containers/timeline";
+import FloatingMenu from "./containers/floating-menu";
 
 export default function Home() {
+  const exampleParams = {
+    left_hand: { selected: false },
+  };
+
+  const [params, setParams] = useState<any>(exampleParams);
+  return (
+    <div className="w-screen h-fit bg-[#E2E4EA] flex justify-center items-start py-20">
+      <Skeleton partsInput={params} />
+      <Timeline />
+      <FloatingMenu />
+    </div>
+  );
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
