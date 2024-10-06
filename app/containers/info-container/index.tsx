@@ -16,7 +16,7 @@ export default function InfoContainer() {
   return (
     <div className="flex w-full items-start justify-between ">
       <MedicalTimeline skeletonParts={params} setSkeletonParts={setParams} />
-      <Timeline data={sortedData} params={params} setParams={setParams} />;
+      <Timeline data={sortedData} params={params} setParams={setParams} />
     </div>
   );
 }

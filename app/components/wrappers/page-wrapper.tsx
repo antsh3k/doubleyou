@@ -20,7 +20,7 @@ export default async function PageWrapper({
       <NavBar userId={userId} user={!!user} title={title} />
       <main
         className={cn(
-          "flex min-w-screen min-h-screen flex-col items-center dark:bg-black bg-white justify-between",
+          "flex min-w-screen min-h-screen flex-col items-center  justify-between",
           className
         )}
       >
