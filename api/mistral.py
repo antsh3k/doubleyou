@@ -164,13 +164,13 @@ async def medical_summary_endpoint(events: List[MedicalEvent]):
     model = "mistral-large-latest"
     client = Mistral(api_key=api_key)
 
+    events_str = "\n".join([f"- {event.disease} ({'Chronic' if event.chronic else 'Acute'}), Medication: {', '.join(event.medication)}, Body Part: {', '.join(event.body_part)}, Date/Time: {event.date_time}" for event in events])
+
     prompt = f"""
     Based on the following medical events, generate a short summary in the following format:
 
     __Medical history:__
-    - Disease 1 (Chronic/Acute)
-    - Disease 2 (Chronic/Acute)
-    ...
+    {events_str}
 
     __Medication history:__
     - Medication 1
@@ -180,32 +180,26 @@ async def medical_summary_endpoint(events: List[MedicalEvent]):
     __Current complaint:__
     Disease (Body part), Date/Time
 
-    Medical events:
-    {json.dumps(events, indent=2)}
-
     If there is not enough information to fill a category, return "Unknown" for that category.
     """
 
     messages = [
         {
             "role": "user",
-            "content": prompt
+            "content": prompt,
         }
     ]
 
     chat_response = client.chat.complete(
-        model=model,
-        messages=messages,
-        response_format={
+          model = model,
+          messages = messages,
+          response_format={
             "type": "text",
         },
         temperature=0
     )
 
-    # Parse the response as JSON
-    summary = json.loads(chat_response.choices[0].message.content)
-
-    return summary
+    return {"summary": chat_response.choices[0].message.content}
 
 @router.post("/simulate")
 async def simulate_endpoint(events: List[MedicalEvent]):
