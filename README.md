@@ -9,14 +9,14 @@ __Solution:__ Digital Doctor
 
 We see our digital doctor consisting of three core components:
 
-### (Legs) Healthcare Agents
-- **AI-driven medical document processor**, the foundation of our doctor providing real-time insights and conversational healthcare assistants. Reducing the administrative burden on healthcare professionals.
+### (Legs) Universal Information Processor
+- **AI-driven medical document processor** that serves as the foundation for tracking your health. Upload documents and images securely, consolidating all your health data in one safe location.
 
-### (Core) Digital Health Twin
-- **Highly accurate digital health representation** of any patient or patient cohort which can be used to curate personalized treatments and allow virtual trials of new drugs.
+### (Core) Digital Health Twin and Healthcare Agents
+- **Highly accurate digital health representation** of yourself, offering real-time insights and conversational healthcare assistants. Understand your health better, and summarize your current situation easily for healthcare professionals.
 
 ### (Brain)  Future Health Simulator
-- **Simulating future health trajectory**, identifying future healthcare needs, predicting outcomes of alternative treatment paths.
+- **Simulating your future health trajectory**, to identify future healthcare needs and explore treatment options, including risks and side effects. All information is personalized based on your digital health twin.
 
 
 ## APP
