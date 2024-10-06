@@ -5,7 +5,7 @@ Effortlessly track your health data and access personalized medical expert level
 ## Introduction
 __Problem:__ Healthcare is a mess
 
-__Solution:__ Digital Doctor
+__Solution:__ A *Digital Doctor* that serves as an accurate mirror of you, providing personalized health insights, proactive care, and seamless health management.
 
 We see our digital doctor consisting of three core components:
 
