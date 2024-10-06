@@ -149,7 +149,8 @@ Use this format to extract and present the data accurately in JSON format.
         messages=messages,
         response_format={
             "type": "json_object",
-        }
+        },
+        temperature=0
     )
 
     return {"response": chat_response.choices[0].message.content}
@@ -197,7 +198,8 @@ async def medical_summary_endpoint(events: List[MedicalEvent]):
         messages=messages,
         response_format={
             "type": "text",
-        }
+        },
+        temperature=0
     )
 
     # Parse the response as JSON
@@ -238,7 +240,8 @@ async def simulate_endpoint(events: List[MedicalEvent]):
         messages=messages,
         response_format={
             "type": "json_object",
-        }
+        },
+        temperature=0
     )
 
     next_event = MedicalEvent.parse_raw(chat_response.choices[0].message.content)
