@@ -1,33 +1,23 @@
 "use client";
-import { BodyComponent } from "@darshanpatel2608/human-body-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import MultiStepOnboarding from "./components/multi-step-onboarding";
+import { Skeleton } from "./components/skeleton";
+import Timeline from "./containers/timeline";
+import FloatingMenu from "./containers/floating-menu";
 
 export default function Home() {
   const exampleParams = {
-    head: { selected: true },
-    left_arm: { show: false },
-    left_hand: { show: false },
+    left_hand: { selected: false },
   };
 
   const [params, setParams] = useState<any>(exampleParams);
   return (
-    <div className="bg-black w-screen h-screen">
-      {/* <MultiStepOnboarding /> */}
-      <BodyComponent partsInput={params} />
-    </div>
-  );
-  return (
-    <div className="min-w-screen min-h-screen flex justify-center items-center flex-col">
-      <h1>hello</h1>
-      <iframe
-        src="https://human.biodigital.com/viewer?modelId=someModelId&bgColor=ffffff"
-        width="100%"
-        height="600"
-        allowFullScreen
-      ></iframe>
+    <div className="w-screen h-fit bg-[#E2E4EA] flex justify-center items-start py-20">
+      <Skeleton partsInput={params} />
+      <Timeline />
+      <FloatingMenu />
     </div>
   );
   return (

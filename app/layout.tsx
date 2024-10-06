@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <AuthWrapper>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={`${inter.className} bg-[#E2E4EA] h-full`}>
           <PageWrapper>
             {children}
             {/* <Toaster/> */}
