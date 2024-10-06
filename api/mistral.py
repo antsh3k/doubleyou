@@ -156,51 +156,64 @@ Use this format to extract and present the data accurately in JSON format.
 
 @router.post("/medical_summary")
 async def medical_summary_endpoint(events: List[MedicalEvent]):
-    # Initialize the medical summary
-    summary = MedicalSummary(medical_history="", medication_history="", current_complaint="")
-
-    # Iterate over the events
-    for event in events:
-        # Add the disease to the medical history
-        if event.category == "Medical document":
-            summary.medical_history += f"- {event.disease} ({'Chronic' if event.chronic else 'Acute'})\n"
-
-        # Add the medication to the medication history
-        if event.medication:
-            summary.medication_history += f"- {', '.join(event.medication)}\n"
-
-        # If the event is a current complaint, add it to the current complaint section
-        if event.category == "Current complaint":
-            summary.current_complaint = f"{event.disease} ({', '.join(event.body_part)}), {event.date_time}"
-
-    # If the medical history is empty, set it to "Unknown"
-    if not summary.medical_history:
-        summary.medical_history = "Unknown"
-
-    # If the medication history is empty, set it to "Unknown"
-    if not summary.medication_history:
-        summary.medication_history = "Unknown"
-
-    # If the current complaint is empty, set it to "Unknown"
-    if not summary.current_complaint:
-        summary.current_complaint = "Unknown"
-
-    # Return the medical summary
-    return summary
-
-@router.post("/simulate")
-async def simulate_endpoint(events: List[MedicalEvent]):
-    # Get the Mistral API key from the environment variables
     api_key = os.environ.get("MISTRAL_API_KEY")
     if not api_key:
         raise HTTPException(status_code=500, detail="MISTRAL_API_KEY not found in environment variables")
 
-    # Set the model to use
     model = "mistral-large-latest"
-    # Create a new Mistral client
     client = Mistral(api_key=api_key)
 
-    # Define the prompt
+    prompt = f"""
+    Based on the following medical events, generate a short summary in the following format:
+
+    __Medical history:__
+    - Disease 1 (Chronic/Acute)
+    - Disease 2 (Chronic/Acute)
+    ...
+
+    __Medication history:__
+    - Medication 1
+    - Medication 2
+    ...
+
+    __Current complaint:__
+    Disease (Body part), Date/Time
+
+    Medical events:
+    {json.dumps(events, indent=2)}
+
+    If there is not enough information to fill a category, return "Unknown" for that category.
+    """
+
+    messages = [
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+
+    chat_response = client.chat.complete(
+        model=model,
+        messages=messages,
+        response_format={
+            "type": "text",
+        }
+    )
+
+    # Parse the response as JSON
+    summary = json.loads(chat_response.choices[0].message.content)
+
+    return summary
+
+@router.post("/simulate")
+async def simulate_endpoint(events: List[MedicalEvent]):
+    api_key = os.environ.get("MISTRAL_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="MISTRAL_API_KEY not found in environment variables")
+
+    model = "mistral-large-latest"
+    client = Mistral(api_key=api_key)
+
     prompt = f"""
     Based on the current medical events, forecast me the next medical event on the list of previous medical events.
 
@@ -213,7 +226,6 @@ async def simulate_endpoint(events: List[MedicalEvent]):
     If there is not enough information to return an accurate forecast, return "UNK" in each category.
     """
 
-    # Create the messages to send to the Mistral API
     messages = [
         {
             "role": "user",
@@ -221,7 +233,6 @@ async def simulate_endpoint(events: List[MedicalEvent]):
         }
     ]
 
-    # Send the messages to the Mistral API and get the response
     chat_response = client.chat.complete(
         model=model,
         messages=messages,
