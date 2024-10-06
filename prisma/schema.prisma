@@ -30,10 +30,6 @@ model File {
   updatedAt  DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [id])
   userId     String
-  disease    String?
-  chronic    Boolean?
-  medication String[]
-  bodyPart   String[]
+  summary    Json?
   date       DateTime
-  category   String?
 }

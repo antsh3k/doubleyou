@@ -121,33 +121,5 @@ export const mockMedicalDocument = {
       body_part: ["head"],
       date_time: "2021-09-12 17:20",
     },
-    {
-      disease: "Torn Ligament",
-      chronic: false,
-      medication: ["Painkillers", "Surgery"],
-      body_part: ["right_leg_upper"],
-      date_time: "2024-03-14 11:25",
-    },
-    {
-      disease: "Sciatica",
-      chronic: true,
-      medication: ["Gabapentin"],
-      body_part: ["left_leg_lower", "left_leg_upper"],
-      date_time: "2022-06-25 13:00",
-    },
-    {
-      disease: "Rotator Cuff Tear",
-      chronic: false,
-      medication: ["Surgery", "Rehabilitation"],
-      body_part: ["left_shoulder"],
-      date_time: "2021-08-19 08:50",
-    },
-    {
-      disease: "Chronic Kidney Disease",
-      chronic: true,
-      medication: ["Lisinopril", "Water Pills"],
-      body_part: ["stomach"],
-      date_time: "2021-11-05 07:40",
-    },
   ],
 };

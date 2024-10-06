@@ -10,7 +10,8 @@ export const MedicalTimeline: React.FC<{
   setSkeletonParts: React.Dispatch<
     React.SetStateAction<BodyComponentProps["parts"]>
   >;
-}> = ({ skeletonParts, setSkeletonParts }) => {
+  transformedDocuments: any;
+}> = ({ skeletonParts, setSkeletonParts, transformedDocuments }) => {
   const [sliderValue, setSliderValue] = useState([0]);
 
   useEffect(() => {
@@ -20,7 +21,13 @@ export const MedicalTimeline: React.FC<{
 
   const updateSkeletonParts = (value: number) => {
     const newParts: BodyComponentProps["parts"] = {};
-    const events = mockMedicalDocument.events.slice(0, value + 1);
+    const sortedEvents = transformedDocuments.events
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(a.date_time).getTime() - new Date(b.date_time).getTime()
+      );
+    const events = sortedEvents.slice(0, value + 1);
 
     events.forEach((event) => {
       event.body_part.forEach((part) => {

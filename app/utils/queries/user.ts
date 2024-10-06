@@ -2,19 +2,12 @@
 import db from "@/utils/db";
 import { revalidatePath } from "next/cache";
 
-import { User } from "@prisma/client";
-
-export async function createUser(
-  data: Omit<User, "id" | "createdAt" | "updatedAt">
-) {
+export async function createUser(data: any) {
   try {
-    const user = await db.user.upsert({
-      where: { clerkId: data.clerkId },
-      update: data,
-      create: data,
+    const user = await db.user.create({
+      data: { clerkId: data.user_id, email: data.email },
     });
     revalidatePath("/");
-
     return { user };
   } catch (error: any) {
     console.log("🔴 - ", error.message);
@@ -26,7 +19,7 @@ export async function getUserById(id: string) {
   try {
     const user = await db.user.findUnique({
       where: {
-        id,
+        clerkId: id,
       },
     });
     return user;

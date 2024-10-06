@@ -30,47 +30,90 @@ import { Button } from "@/app/components/ui/button";
 import Image from "next/image";
 import { Loader2, X } from "lucide-react";
 import { DatePicker } from "@/app/components/date-picker";
+import { createDocument, updateDocument } from "@/app/utils/queries/documents";
+import moment from "moment";
 
 const formSchema = z.object({
-  title: z.string().min(2, {
+  name: z.string().min(2, {
     message: "Titles must be at least 2 characters.",
   }),
   images: z.array(z.string().url()),
   date: z.date(),
+  summary: z.any(),
 });
 
 const Upload = ({ children }: { children: React.ReactNode }) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [documentSummary, setDocumentSummary] = useState<any>(undefined);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  async function onUpdate(values: z.infer<typeof formSchema>) {
-    // console.log("values", values);
+  const images = form.watch("images");
 
-    const resp = await fetch("/api/process-document", {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      // const serializedSummary = documentSummary?.response
+      //   ? JSON.parse(JSON.stringify(documentSummary?.response))
+      //   : null;
+
+      const metadata = {
+        name: values.name,
+        date: moment(values.date).format("L"),
+        images: images[0],
+        summary: documentSummary,
+      };
+      console.log("🟣 - metadata", metadata);
+
+      const resp = await fetch("/api/create-document", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(metadata),
+      });
+      const data = await resp.json();
+      setOpen(false);
+      toast({
+        title: "Document uploaded successfully",
+        description: "Your document has been created and saved.",
+      });
+    } catch (error) {
+      console.error("Error creating document:", error);
+      toast({
+        title: "Error",
+        description:
+          "There was a problem uploading your document. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function onUpload(imageUrl: string) {
+    setSubmitting(true);
+    const resp = await fetch("/api/py/pixtral", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: "1",
-        imageUrl:
-          "https://utfs.io/f/K4uUujr4zCgieTO3dqbjpTYqOHKQCX5t1VyLlhd8i96SARoU",
+        image_url: imageUrl,
       }),
     });
-    // const data = await resp.json();
-    // console.log("🟣 - data", data);
-    // upload to db
-
-    // query mistral model
+    const data = await resp.json();
+    // Convert the response to an object
+    const transformedData = JSON.parse(data.response);
+    setDocumentSummary(transformedData);
+    setSubmitting(false);
   }
 
-  const images = form.watch("images");
-  console.log("images", images);
-
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent className="sm:max-w-[425px] overflow-y-scroll max-h-screen">
         <AlertDialogHeader>
@@ -82,10 +125,10 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
         <Form {...form}>
           <form
             className="flex flex-col gap-4"
-            onSubmit={form.handleSubmit(onUpdate)}
+            onSubmit={form.handleSubmit(onSubmit)}
           >
             <FormField
-              name="title"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -120,10 +163,11 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
                   <FormControl>
                     <UploadDropzone
                       endpoint="imageUploader"
-                      onClientUploadComplete={(res) => {
+                      onClientUploadComplete={async (res) => {
                         const urls = res.map((image) => image.url);
                         const currentUrls = form.getValues("images") || [];
                         form.setValue("images", [...currentUrls, ...urls]);
+                        onUpload(urls[0]);
                       }}
                       config={{ mode: "auto" }}
                       onUploadError={() => {
@@ -154,7 +198,7 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
                       // onClick={() => handleDeleteImage(image)}
                       className="absolute top-1 right-1 w-6 h-6 z-10 rounded-full"
                     >
-                      {isLoading ? (
+                      {isLoading || submitting ? (
                         <Loader2 className="animate-spin" size={16} />
                       ) : (
                         <X size={16} />
@@ -172,14 +216,16 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
           </form>
         </Form>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading || submitting}>
+            Cancel
+          </AlertDialogCancel>
 
           <Button asChild variant="default">
             <AlertDialogAction
               type="submit"
               className="gap-2"
-              disabled={isLoading}
-              onClick={form.handleSubmit(onUpdate)}
+              disabled={isLoading || submitting}
+              onClick={form.handleSubmit(onSubmit)}
             >
               {isLoading && <Loader2 className="animate-spin" size={20} />}
               <div>Upload</div>

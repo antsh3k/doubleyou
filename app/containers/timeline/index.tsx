@@ -23,6 +23,7 @@ export default function Timeline({
   params: any;
   setParams: any;
 }) {
+  console.log("data", data);
   return (
     <div className="flex justify-center flex-col items-start w-full max-w-lg mx-auto p-4 bg-white/15 backdrop-blur-[11px] rounded-[10px] overflow-y-scroll">
       <div className="w-full">
@@ -60,53 +61,56 @@ export default function Timeline({
           <div className="flex flex-col gap-1">
             <small className="text-gray-500">Start Date</small>
             <time dateTime="2023-01-25" className="text-sm">
-              25 Jan 2023
+              {moment(data[0].date_time).format("DD MMM YYYY")}
             </time>
           </div>
         </div>
       </div>
       <TimelineComponent className="max-h-[50vh] w-full overflow-y-scroll">
-        {data.map((item: any, i: number) => (
-          <TimelineItem key={i} status="done" className={`cursor-pointer`}>
-            <TimelineDot
-              status="current"
-              className={item.chronic ? "text-red-500" : "text-amber-600"}
-            />
-            <TimelineHeading>{item.disease}</TimelineHeading>
-            <TimelineLine done={true} />
-            <TimelineContent className="flex justify-between items-start w-full">
-              <div>
-                <time className="block" dateTime="2023-01-25">
-                  {moment(item.date_time).format("DD MMM YYYY")}
-                </time>
-                <p>Treatment: {item.medication.join(", ") || "No treatment"}</p>
-              </div>
-              {item.body_part.length ? (
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    const updatedParams = { ...params };
-                    const bodyParts =
-                      item.body_part.length > 1
-                        ? item.body_part
-                            .split(",")
-                            .map((part: string) => part.trim())
-                        : [item.body_part];
-                    bodyParts.forEach((bodyPart: any) => {
-                      updatedParams[bodyPart] = {
-                        selected: !params[bodyPart]?.selected,
-                        condition: item.chronic ? "chronic" : "",
-                      };
-                    });
-                    setParams(updatedParams);
-                  }}
-                >
-                  <Eye />
-                </Button>
-              ) : null}
-            </TimelineContent>
-          </TimelineItem>
-        ))}
+        {data &&
+          data.map((item: any, i: number) => (
+            <TimelineItem key={i} status="done" className={`cursor-pointer`}>
+              <TimelineDot
+                status="current"
+                className={item.chronic ? "text-red-500" : "text-amber-600"}
+              />
+              <TimelineHeading>{item.disease}</TimelineHeading>
+              <TimelineLine done={true} />
+              <TimelineContent className="flex justify-between items-start w-full">
+                <div>
+                  <time className="block" dateTime="2023-01-25">
+                    {item.date_time}
+                  </time>
+                  <p>
+                    Treatment: {item.medication.join(", ") || "No treatment"}
+                  </p>
+                </div>
+                {item.body_part.length ? (
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      const updatedParams = { ...params };
+                      const bodyParts =
+                        item.body_part.length > 1
+                          ? item.body_part
+                              .split(",")
+                              .map((part: string) => part.trim())
+                          : [item.body_part];
+                      bodyParts.forEach((bodyPart: any) => {
+                        updatedParams[bodyPart] = {
+                          selected: !params[bodyPart]?.selected,
+                          condition: item.chronic ? "chronic" : "",
+                        };
+                      });
+                      setParams(updatedParams);
+                    }}
+                  >
+                    <Eye />
+                  </Button>
+                ) : null}
+              </TimelineContent>
+            </TimelineItem>
+          ))}
       </TimelineComponent>
     </div>
   );

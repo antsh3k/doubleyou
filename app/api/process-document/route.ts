@@ -5,7 +5,7 @@ import { streamText, convertToCoreMessages, generateText } from "ai";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { id, imageUrl } = await req.json();
+  const { image_url } = await req.json();
 
   const result = await generateText({
     model: mistral("pixtral-12b-2409"),
@@ -76,9 +76,7 @@ Use this format to extract and present the data accurately in JSON format.`,
           },
           {
             type: "image",
-            image: imageUrl,
-
-            // ImagePart: imageUrl,
+            image: image_url,
           },
         ],
       },
