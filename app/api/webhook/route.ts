@@ -67,7 +67,6 @@ export async function POST(req: Request) {
       ...(last_name ? { last_name } : {}),
       ...(image_url ? { profile_image_url: image_url } : {}),
     };
-    console.log("🟢 - creatingUser");
     await createUser(user as unknown as user);
   }
 

@@ -4,6 +4,7 @@ import ClientLink from "../client-link";
 import { UserSignInModal } from "../sign-in-modal";
 import { User } from "@prisma/client";
 import { UserSignOut } from "../signout";
+import Image from "next/image";
 
 export default function NavBar({
   user,
@@ -21,21 +22,20 @@ export default function NavBar({
         className="pl-2 flex items-center gap-3"
         aria-label="Home"
       >
-        {/* <Image
-          src="/logo.svg"
+        <Image
+          src="/images/logo.png"
           width={200}
           height={200}
-          alt="Bentogrid Logo"
-          className="w-full max-w-[50px]"
+          alt="DoubleYou"
+          className="w-full max-w-[100px] h-full"
           priority
-        /> */}
+        />
         <span className="sr-only">Home</span>
-        <h1>DoubleYou</h1>
+        <h1 className="text-medium text-xl">DoubleYou</h1>
       </ClientLink>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           {user?.id && <UserProfile user={user} />}
-          {/* <ModeToggle /> */}
           {!user?.id && !userId ? <UserSignInModal /> : <UserSignOut />}
         </div>
       </div>

@@ -34,7 +34,6 @@ const MultiStepOnboarding: React.FC = () => {
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
     // Handle form submission
   };
 

@@ -43,27 +43,31 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   title: "",
-    //   images: [],
-    //   date: "",
-    // },
   });
 
   async function onUpdate(values: z.infer<typeof formSchema>) {
-    console.log("values", values);
-    // if (values.status === ListingStatus.REVIEW_FAILED) {
-    //   mutation.mutate({
-    //     id: values.id,
-    //     status: ListingStatus.REVIEW_FAILED,
-    //     reason: values.reason,
-    //     note: values.note,
-    //     images: values.images,
-    //   });
-    // }
+    // console.log("values", values);
+
+    const resp = await fetch("/api/process-document", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: "1",
+        imageUrl:
+          "https://utfs.io/f/K4uUujr4zCgieTO3dqbjpTYqOHKQCX5t1VyLlhd8i96SARoU",
+      }),
+    });
+    // const data = await resp.json();
+    // console.log("🟣 - data", data);
+    // upload to db
+
+    // query mistral model
   }
 
   const images = form.watch("images");
+  console.log("images", images);
 
   return (
     <AlertDialog>

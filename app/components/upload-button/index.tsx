@@ -8,7 +8,7 @@ const UploadButton = () => {
       endpoint="imageUploader"
       onClientUploadComplete={(res) => {
         // Do something with the response
-        console.log("Files: ", res);
+        // console.log("Files: ", res);
         alert("Upload Completed");
       }}
       onUploadError={(error: Error) => {
