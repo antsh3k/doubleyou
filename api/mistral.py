@@ -1,18 +1,25 @@
 import os
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from mistralai import Mistral
+from typing import List
 
 router = APIRouter()
 
 class Message(BaseModel):
     content: str
 
+class Conversation(BaseModel):
+    messages: List[dict] = []
+
 class PixtralMessage(BaseModel):
     image_url: str
 
+async def get_conversation() -> Conversation:
+    return Conversation()
+
 @router.post("/mistral")
-async def mistral_endpoint(message: Message):
+async def mistral_endpoint(message: Message, conversation: Conversation = Depends(get_conversation)):
     api_key = os.environ.get("MISTRAL_API_KEY")
     if not api_key:
         raise HTTPException(status_code=500, detail="MISTRAL_API_KEY not found in environment variables")
@@ -20,15 +27,15 @@ async def mistral_endpoint(message: Message):
     model = "mistral-large-latest"
     client = Mistral(api_key=api_key)
 
+    conversation.messages.append({"role": "user", "content": message.content})
+
     chat_response = client.chat.complete(
         model=model,
-        messages=[
-            {
-                "role": "user",
-                "content": message.content,
-            },
-        ]
+        messages=conversation.messages
     )
+
+    # Add the assistant's message to the conversation history
+    conversation.messages.append({"role": "assistant", "content": chat_response.choices[0].message.content})
 
     return {"response": chat_response.choices[0].message.content}
 
