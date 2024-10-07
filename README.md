@@ -21,7 +21,7 @@ We see our digital doctor consisting of three core components:
 
 ## APP
 
-![App Screenshot](media/frontend_demo.png)
+![App Screenshot](media/Frontend_demo.png)
 
 
 
