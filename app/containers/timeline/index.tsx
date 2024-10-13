@@ -72,7 +72,7 @@ export default function Timeline({
             <TimelineItem key={i} status="done" className={`cursor-pointer`}>
               <TimelineDot
                 status="current"
-                className={item.chronic ? "text-red-500" : "text-amber-600"}
+                className={item.chronic ? "text-red-500" : "text-blue-600"}
               />
               <TimelineHeading>{item.disease}</TimelineHeading>
               <TimelineLine done={true} />

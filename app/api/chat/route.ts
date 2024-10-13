@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
   const result = await streamText({
     model: mistral("mistral-small-latest"),
-    maxTokens: 10,
+    maxTokens: 10000,
     messages: convertToCoreMessages(messages),
   });
 

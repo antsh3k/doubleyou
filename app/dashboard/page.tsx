@@ -16,6 +16,7 @@ export default async function Home() {
   const user = (userId ? await getUserById(userId) : undefined) as
     | User
     | undefined;
+  // console.log("user", user);
 
   if (!user?.id) {
     return (
@@ -35,13 +36,27 @@ export default async function Home() {
     );
   }
 
-  const docs = documents?.flatMap((document: any) => {
-    const events = JSON.parse(document.summary).events;
-    return events.map((event: any) => ({
-      ...event,
-      date_time: new Date(document.date),
-    }));
-  });
+  const docs = documents
+    ?.flatMap((document: any) => {
+      const events = JSON.parse(document?.summary)?.events || [
+        {
+          disease: "Unknown",
+          chronic: false,
+          medication: [],
+          body_part: [],
+          date_time: "January 1, 2024",
+        },
+      ];
+      if (!events) {
+        return;
+      }
+
+      return events.map((event: any) => ({
+        ...event,
+        date_time: new Date(document.date),
+      }));
+    })
+    .filter((event) => event !== undefined);
 
   const transformDocuments = (events: any[]) => {
     return {
@@ -64,7 +79,6 @@ export default async function Home() {
       ? [...transformedDocuments.events].concat(mockMedicalDocument.events)
       : mockMedicalDocument.events,
   };
-  // console.log("tran", transformedDocuments);
 
   return (
     <div className="w-screen h-fit flex justify-center items-start py-20 px-20">

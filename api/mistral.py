@@ -135,6 +135,7 @@ If you cannot extract certain information, use "Unknown" for string fields, an e
         },
         temperature=0,
     )
+    print("🟣 - ", chat_response)
 
     return {"response": chat_response.choices[0].message.content}
 

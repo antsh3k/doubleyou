@@ -32,6 +32,7 @@ import { Loader2, X } from "lucide-react";
 import { DatePicker } from "@/app/components/date-picker";
 import { createDocument, updateDocument } from "@/app/utils/queries/documents";
 import moment from "moment";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -50,7 +51,7 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-
+  const router = useRouter();
   const images = form.watch("images");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -66,7 +67,6 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
         images: images[0],
         summary: documentSummary,
       };
-      console.log("🟣 - metadata", metadata);
 
       const resp = await fetch("/api/create-document", {
         method: "POST",
@@ -77,6 +77,7 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
       });
       const data = await resp.json();
       setOpen(false);
+      router.refresh();
       toast({
         title: "Document uploaded successfully",
         description: "Your document has been created and saved.",
@@ -96,20 +97,25 @@ const Upload = ({ children }: { children: React.ReactNode }) => {
 
   async function onUpload(imageUrl: string) {
     setSubmitting(true);
-    const resp = await fetch("/api/py/pixtral", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        image_url: imageUrl,
-      }),
-    });
-    const data = await resp.json();
-    // Convert the response to an object
-    const transformedData = JSON.parse(data.response);
-    setDocumentSummary(transformedData);
-    setSubmitting(false);
+    try {
+      const resp = await fetch("/api/py/pixtral", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          image_url: imageUrl,
+        }),
+      });
+      const data = await resp.json();
+      // Convert the response to an object
+      const transformedData = JSON.parse(data.response);
+      setDocumentSummary(transformedData);
+      setSubmitting(false);
+    } catch (e) {
+      setSubmitting(false);
+      console.log("🟣 - ", e);
+    }
   }
 
   return (
