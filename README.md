@@ -1,6 +1,7 @@
 # DoubleYou
 Effortlessly track your health data and access personalized medical expert level insights, all at your fingertips.
 
+![App Screenshot](media/Frontend_demo.png)
 
 ## Introduction
 __Problem:__ Healthcare is complex and fragmented
